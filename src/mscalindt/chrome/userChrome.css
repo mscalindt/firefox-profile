@@ -1,0 +1,5 @@
+/* Remove close button from tabs */
+.tabbrowser-tab:not([pinned]) .tab-close-button { display:none !important; }
+
+/* Remove fullscreen transition animation */
+#navigator-toolbox[fullscreenShouldAnimate] { transition:none !important; }
