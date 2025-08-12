@@ -1,0 +1,2 @@
+rel:
+	sh ./release.sh
