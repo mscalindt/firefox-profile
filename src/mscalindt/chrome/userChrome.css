@@ -3,3 +3,12 @@
 
 /* Remove fullscreen transition animation */
 #navigator-toolbox[fullscreenShouldAnimate] { transition:none !important; }
+
+/* Remove close button at the end of toolbar */
+.titlebar-close,
+#titlebar .titlebar-close,
+.titlebar-buttonbox .titlebar-close {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

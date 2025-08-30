@@ -1,10 +1,11 @@
-141.0 [2025-08-06]
+142.0 [2025-08-30]
 ==================
 
 UI settings (all UI settings and concrete steps can be seen in `ui-settings/`):
 - browser.contentblocking.category -> strict
 - browser.display.document_color_use -> 0
 - browser.display.use_document_fonts -> 0
+- browser.download.dir -> /tmp
 - browser.newtabpage.activity-stream.feeds.topsites -> false
 - browser.newtabpage.activity-stream.showSponsoredTopSites -> false
 - browser.safebrowsing.malware.enabled -> false
@@ -39,11 +40,16 @@ UI settings (all UI settings and concrete steps can be seen in `ui-settings/`):
 - permissions.default.desktop-notification -> 2
 - permissions.default.xr -> 2
 - privacy.bounceTrackingProtection.mode -> 1
+- privacy.trackingprotection.allow_list.baseline.enabled -> false
 - privacy.trackingprotection.enabled -> true
 - sidebar.visibility -> hide-sidebar
 - signon.rememberSignons -> false
 - toolkit.telemetry.reportingpolicy.firstRun -> false
 - trailhead.firstrun.didSeeAboutWelcome -> true
+
+How it looks:
+- `ui-settings/22.png`
+- `ui-settings/23.png`
 
 Other (custom configuration is created by `release.sh`):
 - chrome/userChrome.css

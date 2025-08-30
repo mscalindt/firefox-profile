@@ -14,28 +14,54 @@ CLEANED_PREFS=$(
             'user_pref("sidebar.backupState"'*)
                 LINE='user_pref("sidebar.backupState", "{}");'
             ;;
-            # we cfg the following entries explicitly and drop expected vals;
-            # usage to spot unexpected vals: observe complete VCS diff of
-            # before->after profile run. unexpected vals noted below
+            # explicitly configured vals
             #
-            # unexpected values on complete VCS diff:
+            # unexpected values:
             # - `browser.laterrun.enabled` = `true`; reason: overriden by
             #   firefox to always activate for "new profiles".
-            'user_pref("app.normandy.first_run"'* | \
-            'user_pref("browser.laterrun.enabled"'* | \
-            'user_pref("browser.safebrowsing.downloads.enabled"'* | \
-            'user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides"'* | \
-            'user_pref("network.http.speculative-parallel-limit"'*)
-                # expected val = we can drop entry
-                case "$LINE" in
-                    'user_pref("app.normandy.first_run", false);' | \
-                    'user_pref("browser.laterrun.enabled", false);' | \
-                    'user_pref("browser.safebrowsing.downloads.enabled", false);' | \
-                    'user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides", false);' | \
-                    'user_pref("network.http.speculative-parallel-limit", 0);')
-                        continue
-                    ;;
-                esac
+            'user_pref("accessibility.force_disabled", 1);' | \
+            'user_pref("app.normandy.enabled", false);' | \
+            'user_pref("app.normandy.first_run", false);' | \
+            'user_pref("app.shield.optoutstudies.enabled", false);' | \
+            'user_pref("app.update.auto", false);' | \
+            'user_pref("browser.aboutConfig.showWarning", false);' | \
+            'user_pref("browser.aboutwelcome.enabled", false);' | \
+            'user_pref("browser.cache.disk.enable", false);' | \
+            'user_pref("browser.cache.memory.enable", false);' | \
+            'user_pref("browser.download.start_downloads_in_tmp_dir", true);' | \
+            'user_pref("browser.laterrun.enabled", false);' | \
+            'user_pref("browser.ml.chat.enabled", false);' | \
+            'user_pref("browser.ml.chat.page", false);' | \
+            'user_pref("browser.ml.enable", false);' | \
+            'user_pref("browser.ml.linkPreview.enabled", false);' | \
+            'user_pref("browser.places.speculativeConnect.enabled", false);' | \
+            'user_pref("browser.safebrowsing.allowOverride", false);' | \
+            'user_pref("browser.safebrowsing.blockedURIs.enabled", false);' | \
+            'user_pref("browser.safebrowsing.downloads.enabled", false);' | \
+            'user_pref("browser.safebrowsing.downloads.remote.enabled", false);' | \
+            'user_pref("browser.sessionstore.interval", 120000);' | \
+            'user_pref("browser.sessionstore.max_tabs_undo", 5);' | \
+            'user_pref("browser.sessionstore.privacy_level", 2);' | \
+            'user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);' | \
+            'user_pref("browser.urlbar.speculativeConnect.enabled", false);' | \
+            'user_pref("datareporting.policy.dataSubmissionEnabled", false);' | \
+            'user_pref("dom.serviceWorkers.enabled", false);' | \
+            'user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides", false);' | \
+            'user_pref("media.navigator.enabled", false);' | \
+            'user_pref("media.peerconnection.enabled", false);' | \
+            'user_pref("media.videocontrols.picture-in-picture.enabled", false);' | \
+            'user_pref("mousebutton.4th.enabled", false);' | \
+            'user_pref("mousebutton.5th.enabled", false);' | \
+            'user_pref("mousewheel.min_line_scroll_amount", 15);' | \
+            'user_pref("network.http.speculative-parallel-limit", 0);' | \
+            'user_pref("reader.parse-on-load.enabled", false);' | \
+            'user_pref("screenshots.browser.component.enabled", false);' | \
+            'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
+                continue
+            ;;
+            # implicitly expected/configured vals
+            'user_pref("privacy.trackingprotection.allow_list.convenience.enabled", false);')
+                continue
             ;;
             # the following entries are peculiar and separately stripped
             'user_pref("browser.bookmarks.defaultLocation"'* | \
@@ -43,11 +69,13 @@ CLEANED_PREFS=$(
             'user_pref("browser.firefox-view.view-count"'* | \
             'user_pref("browser.search.totalSearches"'* | \
             'user_pref("browser.tabs.inTitlebar"'* | \
+            'user_pref("browser.termsofuse.prefMigrationCheck"'* | \
             'user_pref("datareporting.policy.dataSubmissionPolicyAcceptedVersion"'* | \
             'user_pref("datareporting.policy.dataSubmissionPolicyNotifiedTime"'* | \
             'user_pref("devtools.debugger.pending-selected-location"'* | \
             'user_pref("identity.fxaccounts.toolbar.accessed"'* | \
             'user_pref("identity.fxaccounts.toolbar.syncSetup.panelAccessed"'* | \
+            'user_pref("privacy.trackingprotection.allow_list.hasMigratedCategoryPrefs"'* | \
             'user_pref("services.sync.lastversion"'*)
                 continue
             ;;
@@ -72,6 +100,7 @@ CLEANED_PREFS=$(
             'user_pref("browser.download.viewableInternally.typeWasRegistered.avif"'* | \
             'user_pref("browser.download.viewableInternally.typeWasRegistered.webp"'* | \
             'user_pref("browser.eme.ui.firstContentShown"'* | \
+            'user_pref("browser.engagement.library-button.has-used"'* | \
             'user_pref("browser.laterrun.bookkeeping.profileCreationTime"'* | \
             'user_pref("browser.laterrun.bookkeeping.sessionCount"'* | \
             'user_pref("browser.migration.version"'* | \
@@ -155,6 +184,8 @@ CLEANED_PREFS=$(
             'user_pref("pdfjs.enabledCache.state"'* | \
             'user_pref("pdfjs.migrationVersion"'* | \
             'user_pref("places.database.lastMaintenance"'* | \
+            'user_pref("pref.privacy.disable_button.cookie_exceptions"'* | \
+            'user_pref("pref.privacy.disable_button.tracking_protection_exceptions"'* | \
             'user_pref("privacy.purge_trackers.date_in_cookie_database"'* | \
             'user_pref("privacy.purge_trackers.last_purge"'* | \
             'user_pref("security.sandbox.content.tempDirSuffix"'* | \
@@ -173,6 +204,7 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.main.doh-config.last_check"'* | \
             'user_pref("services.settings.main.doh-providers.last_check"'* | \
             'user_pref("services.settings.main.fingerprinting-protection-overrides.last_check"'* | \
+            'user_pref("services.settings.main.fxmonitor-breaches.last_check"'* | \
             'user_pref("services.settings.main.hijack-blocklists.last_check"'* | \
             'user_pref("services.settings.main.language-dictionaries.last_check"'* | \
             'user_pref("services.settings.main.message-groups.last_check"'* | \
@@ -218,6 +250,7 @@ CLEANED_PREFS=$(
             'user_pref("services.sync.nextSync"'* | \
             'user_pref("sidebar.main.tools"'* | \
             'user_pref("sidebar.nimbus"'* | \
+            'user_pref("sidebar.notification.badge.aichat"'* | \
             'user_pref("signon.management.page.os-auth.optout"'* | \
             'user_pref("storage.vacuum.last.content-prefs.sqlite"'* | \
             'user_pref("storage.vacuum.last.index"'* | \
@@ -247,6 +280,7 @@ rm -rf \
     "$DIR"/src/mscalindt/gmp-gmpopenh264 \
     "$DIR"/src/mscalindt/gmp-widevinecdm \
     "$DIR"/src/mscalindt/minidumps \
+    "$DIR"/src/mscalindt/saved-telemetry-pings \
     "$DIR"/src/mscalindt/security_state \
     "$DIR"/src/mscalindt/sessionstore-backups \
     "$DIR"/src/mscalindt/settings \
@@ -291,6 +325,15 @@ printf "%s" \
 
 /* Remove fullscreen transition animation */
 #navigator-toolbox[fullscreenShouldAnimate] { transition:none !important; }
+
+/* Remove close button at the end of toolbar */
+.titlebar-close,
+#titlebar .titlebar-close,
+.titlebar-buttonbox .titlebar-close {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
 ' > "$DIR"/src/mscalindt/chrome/userChrome.css
 printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
@@ -302,9 +345,12 @@ user_pref("browser.aboutConfig.showWarning", false);
 user_pref("browser.aboutwelcome.enabled", false);
 user_pref("browser.cache.disk.enable", false);
 user_pref("browser.cache.memory.enable", false);
+user_pref("browser.download.start_downloads_in_tmp_dir", true);
 user_pref("browser.laterrun.enabled", false);
 user_pref("browser.ml.chat.enabled", false);
+user_pref("browser.ml.chat.page", false);
 user_pref("browser.ml.enable", false);
+user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.places.speculativeConnect.enabled", false);
 user_pref("browser.safebrowsing.allowOverride", false);
 user_pref("browser.safebrowsing.blockedURIs.enabled", false);
