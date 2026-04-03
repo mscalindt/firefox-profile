@@ -12,3 +12,14 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Remove navigation controls from the context menu */
+#context-navigation,
+#context-sep-navigation {
+  display: none !important;
+}
+
+/* Remove "Print Selection" from the context menu */
+#context-print-selection {
+  display: none !important;
+}

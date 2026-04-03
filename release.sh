@@ -1,24 +1,46 @@
+# Create a new profile using any Firefox instance and run this script on it:
+# -> create the profile
+# -> run the script on the profile
+# -> start the profile, maybe do some manual configuration (DOCUMENT IT)
+# -> exit the profile by clearing all its data using the Firefox instance
+# -> run the script on the profile
+# -> the profile directory is now the new src/
+#
+# CONTROVERSIAL CONFIGURATION:
+#
+# "SmartBlock stands in for common tracking scripts, which are blocked in
+# Private Browsing mode and in Enhanced Tracking Protection strict level. By
+# doing so, it lets pages load more fully, with less breakage, without you
+# having to do anything – all while keeping those tracking scripts blocked"
+# "These fixes are there to make certain sites users have reported to us (via
+# webcompat.com for instance) more usable and less broken, so you'll probably
+# want to keep them enabled. They only kick in when you visit an affected site."
+# "If you do want to disable an entire category for some reason, you can use
+# the prefs you mentioned. Or if you want to disable just one specific fix in
+# any category for testing, you can use about:compat, which lasts until you
+# restart Firefox. There is also a way to disable one for good if a specific
+# one is causing issues, but please let us know why in that case so we're aware
+# and can hopefully fix any problems instead."
+# - user_pref("extensions.webcompat.enable_shims", true);
+# - user_pref("extensions.webcompat.perform_injections", true);
+
 set -e
 
 DIR="$(cd "${0%/*}" && printf "%s" "$PWD")"
 PREFS="$DIR"/src/mscalindt/prefs.js
+
+# This only cleans prefs.js; it is not supposed to actually induce any
+# configuration modification.
+if [ -f "$PREFS" ]; then
 CLEANED_PREFS=$(
     while IFS= read -r LINE; do
         case "$LINE" in
-            'user_pref("browser.safebrowsing.provider.mozilla.nextupdatetime"'*)
-                LINE='user_pref("browser.safebrowsing.provider.mozilla.nextupdatetime", "1");'
-            ;;
-            'user_pref("browser.startup.couldRestoreSession.count"'*)
-                LINE='user_pref("browser.startup.couldRestoreSession.count", 0);'
-            ;;
-            'user_pref("sidebar.backupState"'*)
-                LINE='user_pref("sidebar.backupState", "{}");'
-            ;;
-            # explicitly configured vals
+            # REMOVE OUR CONFIGURED VALUES, FOR DIFF FOR NEW PROFILES FOR NEW
+            # (UNHANDLED) STRINGS/CONFIGURATION
             #
-            # unexpected values:
-            # - `browser.laterrun.enabled` = `true`; reason: overriden by
-            #   firefox to always activate for "new profiles".
+            # FIREFOX MAY (HARD) OVERRIDE OUR CONFIGURATION, SO IT IS "FINE" IF
+            # VALUES, LIKE `browser.laterrun.enabled`, DO NOT MATCH OUR AND IN
+            # TURN REMAIN IN prefs.js REGARDLESS
             'user_pref("accessibility.force_disabled", 1);' | \
             'user_pref("app.normandy.enabled", false);' | \
             'user_pref("app.normandy.first_run", false);' | \
@@ -28,69 +50,144 @@ CLEANED_PREFS=$(
             'user_pref("browser.aboutwelcome.enabled", false);' | \
             'user_pref("browser.cache.disk.enable", false);' | \
             'user_pref("browser.cache.memory.enable", false);' | \
+            'user_pref("browser.contentblocking.category", "strict");' | \
+            'user_pref("browser.display.document_color_use", 0);' | \
+            'user_pref("browser.display.use_document_fonts", 0);' | \
+            'user_pref("browser.download.dir", "/tmp");' | \
+            'user_pref("browser.download.folderList", 2);' | \
             'user_pref("browser.download.start_downloads_in_tmp_dir", true);' | \
+            'user_pref("browser.ipProtection.enabled", false);' | \
+            'user_pref("browser.ipProtection.autoStartEnabled", false);' | \
+            'user_pref("browser.ipProtection.autoStartPrivateEnabled", false);' | \
+            'user_pref("browser.ipProtection.autoRestoreEnabled", false);' | \
+            'user_pref("browser.ipProtection.userEnabled", false);' | \
             'user_pref("browser.laterrun.enabled", false);' | \
             'user_pref("browser.ml.chat.enabled", false);' | \
+            'user_pref("browser.ml.chat.menu", false);' | \
             'user_pref("browser.ml.chat.page", false);' | \
             'user_pref("browser.ml.enable", false);' | \
             'user_pref("browser.ml.linkPreview.enabled", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.showSponsoredCheckboxes", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.system.showWeatherOptIn", false);' | \
             'user_pref("browser.places.speculativeConnect.enabled", false);' | \
+            'user_pref("browser.preferences.experimental.hidden", false);' | \
             'user_pref("browser.safebrowsing.allowOverride", false);' | \
             'user_pref("browser.safebrowsing.blockedURIs.enabled", false);' | \
             'user_pref("browser.safebrowsing.downloads.enabled", false);' | \
             'user_pref("browser.safebrowsing.downloads.remote.enabled", false);' | \
+            'user_pref("browser.safebrowsing.malware.enabled", false);' | \
+            'user_pref("browser.safebrowsing.phishing.enabled", false);' | \
             'user_pref("browser.sessionstore.interval", 120000);' | \
             'user_pref("browser.sessionstore.max_tabs_undo", 5);' | \
             'user_pref("browser.sessionstore.privacy_level", 2);' | \
+            'user_pref("browser.startup.page", 3);' | \
             'user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);' | \
+            'user_pref("browser.tabs.groups.smart.enabled", false);' | \
+            'user_pref("browser.tabs.groups.smart.userEnabled", false);' | \
+            'user_pref("browser.theme.content-theme", 0);' | \
+            'user_pref("browser.theme.toolbar-theme", 0);' | \
+            'user_pref("browser.toolbars.bookmarks.visibility", "never");' | \
+            'user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"ublock0_raymondhill_net-browser-action\",\"canvasblocker_kkapsner_de-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"developer-button\",\"screenshot-button\",\"canvasblocker_kkapsner_de-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"vertical-tabs\",\"PersonalToolbar\",\"TabsToolbar\",\"unified-extensions-area\",\"toolbar-menubar\"],\"currentVersion\":23,\"newElementCount\":3}");' | \
+            'user_pref("browser.uidensity", 1);' | \
+            'user_pref("browser.urlbar.placeholderName", "DuckDuckGo");' | \
+            'user_pref("browser.urlbar.placeholderName.private", "DuckDuckGo");' | \
+            'user_pref("browser.urlbar.showSearchSuggestionsFirst", false);' | \
             'user_pref("browser.urlbar.speculativeConnect.enabled", false);' | \
+            'user_pref("browser.urlbar.suggest.engines", false);' | \
+            'user_pref("browser.urlbar.suggest.openpage", false);' | \
+            'user_pref("browser.urlbar.suggest.quickactions", false);' | \
+            'user_pref("browser.urlbar.suggest.recentsearches", false);' | \
+            'user_pref("browser.warnOnQuitShortcut", false);' | \
+            'user_pref("datareporting.healthreport.uploadEnabled", false);' | \
             'user_pref("datareporting.policy.dataSubmissionEnabled", false);' | \
+            'user_pref("datareporting.usage.uploadEnabled", false);' | \
+            'user_pref("devtools.accessibility.enabled", false);' | \
+            'user_pref("doh-rollout.disable-heuristics", true);' | \
+            'user_pref("dom.security.https_only_mode", true);' | \
+            'user_pref("dom.security.https_only_mode_ever_enabled", true);' | \
             'user_pref("dom.serviceWorkers.enabled", false);' | \
+            'user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");' | \
+            'user_pref("extensions.formautofill.addresses.enabled", false);' | \
+            'user_pref("extensions.formautofill.creditCards.enabled", false);' | \
+            'user_pref("extensions.ml.enabled", false);' | \
             'user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides", false);' | \
+            'user_pref("extensions.ui.dictionary.hidden", true);' | \
+            'user_pref("extensions.ui.extension.hidden", false);' | \
+            'user_pref("extensions.ui.locale.hidden", true);' | \
+            'user_pref("extensions.ui.mlmodel.hidden", true);' | \
+            'user_pref("extensions.ui.sitepermission.hidden", true);' | \
+            'user_pref("extensions.webcompat.enable_shims", true);' | \
+            'user_pref("extensions.webcompat.perform_injections", true);' | \
+            'user_pref("font.default.x-cyrillic", "sans-serif");' | \
+            'user_pref("font.default.x-western", "sans-serif");' | \
+            'user_pref("font.language.group", "x-western");' | \
+            'user_pref("font.minimum-size.x-cyrillic", 13);' | \
+            'user_pref("font.minimum-size.x-western", 13);' | \
+            'user_pref("font.name.monospace.x-cyrillic", "Source Code Pro");' | \
+            'user_pref("font.name.monospace.x-western", "Source Code Pro");' | \
+            'user_pref("font.size.monospace.x-cyrillic", 13);' | \
+            'user_pref("font.size.monospace.x-western", 13);' | \
+            'user_pref("media.autoplay.default", 5);' | \
+            'user_pref("media.eme.enabled", true);' | \
             'user_pref("media.navigator.enabled", false);' | \
             'user_pref("media.peerconnection.enabled", false);' | \
             'user_pref("media.videocontrols.picture-in-picture.enabled", false);' | \
+            'user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);' | \
             'user_pref("mousebutton.4th.enabled", false);' | \
             'user_pref("mousebutton.5th.enabled", false);' | \
             'user_pref("mousewheel.min_line_scroll_amount", 15);' | \
+            'user_pref("network.dns.disablePrefetch", true);' | \
             'user_pref("network.http.speculative-parallel-limit", 0);' | \
+            'user_pref("network.lna.blocking", true);' | \
+            'user_pref("network.lna.block_trackers", true);' | \
+            'user_pref("network.lna.enabled", true);' | \
+            'user_pref("network.predictor.enabled", false);' | \
+            'user_pref("network.prefetch-next", false);' | \
+            'user_pref("network.proxy.socks5_remote_dns", false);' | \
+            'user_pref("network.trr.mode", 5);' | \
+            'user_pref("nimbus.telemetry.targetingContextEnabled", false);' | \
+            'user_pref("permissions.default.desktop-notification", 2);' | \
+            'user_pref("permissions.default.xr", 2);' | \
+            'user_pref("privacy.bounceTrackingProtection.mode", 1);' | \
+            'user_pref("privacy.globalprivacycontrol.enabled", true);' | \
+            'user_pref("privacy.trackingprotection.allow_list.baseline.enabled", false);' | \
+            'user_pref("privacy.trackingprotection.enabled", true);' | \
             'user_pref("reader.parse-on-load.enabled", false);' | \
             'user_pref("screenshots.browser.component.enabled", false);' | \
-            'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
+            'user_pref("security.OCSP.enabled", 0);' | \
+            'user_pref("sidebar.visibility", "hide-sidebar");' | \
+            'user_pref("signon.management.page.breach-alerts.enabled", false);' | \
+            'user_pref("signon.rememberSignons", false);' | \
+            'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' | \
+            'user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);' | \
+            'user_pref("trailhead.firstrun.didSeeAboutWelcome", true);')
                 continue
             ;;
-            # implicitly expected/configured vals
+            # IMPLICIT CONFIGURED VALUES
+            #
+            # THESE MAY HAVE TO EVENTUALLY BE EXPLICITLY CONFIGURED
             'user_pref("privacy.trackingprotection.allow_list.convenience.enabled", false);')
                 continue
             ;;
-            # the following entries are peculiar and separately stripped
-            'user_pref("browser.bookmarks.defaultLocation"'* | \
-            'user_pref("browser.firefox-view.feature-tour"'* | \
-            'user_pref("browser.firefox-view.view-count"'* | \
-            'user_pref("browser.search.totalSearches"'* | \
-            'user_pref("browser.tabs.inTitlebar"'* | \
-            'user_pref("browser.termsofuse.prefMigrationCheck"'* | \
-            'user_pref("datareporting.policy.dataSubmissionPolicyAcceptedVersion"'* | \
-            'user_pref("datareporting.policy.dataSubmissionPolicyNotifiedTime"'* | \
-            'user_pref("devtools.debugger.pending-selected-location"'* | \
-            'user_pref("identity.fxaccounts.toolbar.accessed"'* | \
-            'user_pref("identity.fxaccounts.toolbar.syncSetup.panelAccessed"'* | \
-            'user_pref("privacy.trackingprotection.allow_list.hasMigratedCategoryPrefs"'* | \
-            'user_pref("services.sync.lastversion"'*)
-                continue
-            ;;
-            # the following entries are garbage leftovers that must be stripped
+            # THE GARBAGE THAT IS CLEANED:
             'user_pref("app.normandy.migrationsApplied"'* | \
             'user_pref("app.normandy.user_id"'* | \
             'user_pref("app.update.lastUpdateTime.addon-background-update-timer"'* | \
             'user_pref("app.update.lastUpdateTime.browser-cleanup-thumbnails"'* | \
+            'user_pref("app.update.lastUpdateTime.glean-addons-daily"'* | \
             'user_pref("app.update.lastUpdateTime.recipe-client-addon-run"'* | \
             'user_pref("app.update.lastUpdateTime.region-update-timer"'* | \
             'user_pref("app.update.lastUpdateTime.rs-experiment-loader-timer"'* | \
             'user_pref("app.update.lastUpdateTime.search-engine-update-timer"'* | \
             'user_pref("app.update.lastUpdateTime.services-settings-poll-changes"'* | \
+            'user_pref("app.update.lastUpdateTime.suggest-ingest"'* | \
             'user_pref("app.update.lastUpdateTime.telemetry_modules_ping"'* | \
             'user_pref("app.update.lastUpdateTime.xpi-signature-verification"'* | \
+            'user_pref("browser.bookmarks.defaultLocation"'* | \
             'user_pref("browser.bookmarks.editDialog.confirmationHintShowCount"'* | \
             'user_pref("browser.contentblocking.report.hide_vpn_banner"'* | \
             'user_pref("browser.contextual-services.contextId"'* | \
@@ -101,6 +198,9 @@ CLEANED_PREFS=$(
             'user_pref("browser.download.viewableInternally.typeWasRegistered.webp"'* | \
             'user_pref("browser.eme.ui.firstContentShown"'* | \
             'user_pref("browser.engagement.library-button.has-used"'* | \
+            'user_pref("browser.firefox-view.feature-tour"'* | \
+            'user_pref("browser.firefox-view.view-count"'* | \
+            'user_pref("browser.ipProtection.locationListCache"'* | \
             'user_pref("browser.laterrun.bookkeeping.profileCreationTime"'* | \
             'user_pref("browser.laterrun.bookkeeping.sessionCount"'* | \
             'user_pref("browser.migration.version"'* | \
@@ -115,10 +215,13 @@ CLEANED_PREFS=$(
             'user_pref("browser.safebrowsing.provider.google4.lastupdatetime"'* | \
             'user_pref("browser.safebrowsing.provider.google4.nextupdatetime"'* | \
             'user_pref("browser.safebrowsing.provider.mozilla.lastupdatetime"'* | \
+            'user_pref("browser.safebrowsing.provider.mozilla.nextupdatetime"'* | \
             'user_pref("browser.search.region"'* | \
             'user_pref("browser.search.serpEventTelemetryCategorization.regionEnabled"'* | \
+            'user_pref("browser.search.totalSearches"'* | \
             'user_pref("browser.sessionstore.upgradeBackup.latestBuildID"'* | \
             'user_pref("browser.shell.mostRecentDateSetAsDefault"'* | \
+            'user_pref("browser.startup.couldRestoreSession.count"'* | \
             'user_pref("browser.startup.homepage_override.buildID"'* | \
             'user_pref("browser.startup.homepage_override.mstone"'* | \
             'user_pref("browser.startup.lastColdStartupCheck"'* | \
@@ -126,8 +229,11 @@ CLEANED_PREFS=$(
             'user_pref("browser.tabs.firefox-view.ui-state.opentabs.open"'* | \
             'user_pref("browser.tabs.firefox-view.ui-state.syncedtabs.open"'* | \
             'user_pref("browser.tabs.firefox-view.ui-state.tab-pickup.open"'* | \
+            'user_pref("browser.tabs.inTitlebar"'* | \
+            'user_pref("browser.termsofuse.prefMigrationCheck"'* | \
             'user_pref("browser.translations.mostRecentTargetLanguages"'* | \
             'user_pref("browser.translations.panelShown"'* | \
+            'user_pref("browser.urlbar.lastUrlbarSearchSeconds"'* | \
             'user_pref("browser.urlbar.quicksuggest.migrationVersion"'* | \
             'user_pref("browser.urlbar.quicksuggest.scenario"'* | \
             'user_pref("browser.urlbar.recentsearches.lastDefaultChanged"'* | \
@@ -135,6 +241,9 @@ CLEANED_PREFS=$(
             'user_pref("captchadetection.lastSubmission"'* | \
             'user_pref("datareporting.dau.cachedUsageProfileGroupID"'* | \
             'user_pref("datareporting.dau.cachedUsageProfileID"'* | \
+            'user_pref("datareporting.policy.dataSubmissionPolicyAcceptedVersion"'* | \
+            'user_pref("datareporting.policy.dataSubmissionPolicyNotifiedTime"'* | \
+            'user_pref("devtools.debugger.pending-selected-location"'* | \
             'user_pref("devtools.everOpened"'* | \
             'user_pref("distribution.archlinux.bookmarksProcessed"'* | \
             'user_pref("distribution.iniFile.exists.appversion"'* | \
@@ -153,8 +262,11 @@ CLEANED_PREFS=$(
             'user_pref("extensions.quarantinedDomains.list"'* | \
             'user_pref("extensions.systemAddonSet"'* | \
             'user_pref("extensions.ui.lastCategory"'* | \
+            'user_pref("extensions.webextensions.uuids"'* | \
             'user_pref("identity.fxaccounts.commands.missed.last_fetch"'* | \
             'user_pref("identity.fxaccounts.lastSignedInUserHash"'* | \
+            'user_pref("identity.fxaccounts.toolbar.accessed"'* | \
+            'user_pref("identity.fxaccounts.toolbar.syncSetup.panelAccessed"'* | \
             'user_pref("idle.lastDailyNotification"'* | \
             'user_pref("media.gmp-gmpopenh264.abi"'* | \
             'user_pref("media.gmp-gmpopenh264.hashValue"'* | \
@@ -188,12 +300,14 @@ CLEANED_PREFS=$(
             'user_pref("pref.privacy.disable_button.tracking_protection_exceptions"'* | \
             'user_pref("privacy.purge_trackers.date_in_cookie_database"'* | \
             'user_pref("privacy.purge_trackers.last_purge"'* | \
+            'user_pref("privacy.trackingprotection.allow_list.hasMigratedCategoryPrefs"'* | \
             'user_pref("security.sandbox.content.tempDirSuffix"'* | \
             'user_pref("services.settings.blocklists.addons-bloomfilters.last_check"'* | \
             'user_pref("services.settings.blocklists.gfx.last_check"'* | \
             'user_pref("services.settings.clock_skew_seconds"'* | \
             'user_pref("services.settings.last_etag"'* | \
             'user_pref("services.settings.last_update_seconds"'* | \
+            'user_pref("services.settings.main.addons-data-leak-blocker-domains.last_check"'* | \
             'user_pref("services.settings.main.addons-manager-settings.last_check"'* | \
             'user_pref("services.settings.main.anti-tracking-url-decoration.last_check"'* | \
             'user_pref("services.settings.main.bounce-tracking-protection-exceptions.last_check"'* | \
@@ -209,6 +323,8 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.main.language-dictionaries.last_check"'* | \
             'user_pref("services.settings.main.message-groups.last_check"'* | \
             'user_pref("services.settings.main.moz-essential-domain-fallbacks.last_check"'* | \
+            'user_pref("services.settings.main.ms-language-packs.last_check"'* | \
+            'user_pref("services.settings.main.newtab-frecency-boosted-sponsors.last_check"'* | \
             'user_pref("services.settings.main.newtab-wallpapers-v2.last_check"'* | \
             'user_pref("services.settings.main.nimbus-desktop-experiments.last_check"'* | \
             'user_pref("services.settings.main.nimbus-secure-experiments.last_check"'* | \
@@ -235,11 +351,14 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.main.tracking-protection-lists.last_check"'* | \
             'user_pref("services.settings.main.translations-identification-models.last_check"'* | \
             'user_pref("services.settings.main.translations-models.last_check"'* | \
+            'user_pref("services.settings.main.translations-models-v2.last_check"'* | \
             'user_pref("services.settings.main.translations-wasm.last_check"'* | \
             'user_pref("services.settings.main.url-classifier-exceptions.last_check"'* | \
             'user_pref("services.settings.main.url-classifier-skip-urls.last_check"'* | \
             'user_pref("services.settings.main.url-parser-default-unknown-schemes-interventions.last_check"'* | \
             'user_pref("services.settings.main.urlbar-persisted-search-terms.last_check"'* | \
+            'user_pref("services.settings.main.vpn-serverlist.last_check"'* | \
+            'user_pref("services.settings.main.webcompat-interventions.last_check"'* | \
             'user_pref("services.settings.main.websites-with-shared-credential-backends.last_check"'* | \
             'user_pref("services.settings.main.whats-new-panel.last_check"'* | \
             'user_pref("services.settings.security-state.cert-revocations.last_check"'* | \
@@ -247,7 +366,9 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.security-state.onecrl.last_check"'* | \
             'user_pref("services.sync.clients.lastSync"'* | \
             'user_pref("services.sync.globalScore"'* | \
+            'user_pref("services.sync.lastversion"'* | \
             'user_pref("services.sync.nextSync"'* | \
+            'user_pref("sidebar.backupState"'* | \
             'user_pref("sidebar.main.tools"'* | \
             'user_pref("sidebar.nimbus"'* | \
             'user_pref("sidebar.notification.badge.aichat"'* | \
@@ -268,9 +389,12 @@ CLEANED_PREFS=$(
         printf "%s\n" "$LINE"
     done < "$PREFS"
 )
+fi
 
-# cleanup
-printf "%s\n" "$CLEANED_PREFS" > "$PREFS"
+# Profile cleanup.
+if [ "$CLEANED_PREFS" ]; then
+    printf "%s\n" "$CLEANED_PREFS" > "$PREFS"
+fi
 rm -rf \
     "$DIR"/src/mscalindt/bookmarkbackups \
     "$DIR"/src/mscalindt/crashes \
@@ -283,10 +407,12 @@ rm -rf \
     "$DIR"/src/mscalindt/saved-telemetry-pings \
     "$DIR"/src/mscalindt/security_state \
     "$DIR"/src/mscalindt/sessionstore-backups \
+    "$DIR"/src/mscalindt/sessionstore-logs \
     "$DIR"/src/mscalindt/settings \
     "$DIR"/src/mscalindt/storage \
     "$DIR"/src/mscalindt/.parentlock \
     "$DIR"/src/mscalindt/addonStartup.json.lz4 \
+    "$DIR"/src/mscalindt/AlternateServices.bin \
     "$DIR"/src/mscalindt/bounce-tracking-protection.sqlite \
     "$DIR"/src/mscalindt/broadcast-listeners.json \
     "$DIR"/src/mscalindt/cert9.db \
@@ -306,6 +432,7 @@ rm -rf \
     "$DIR"/src/mscalindt/handlers.json \
     "$DIR"/src/mscalindt/key4.db \
     "$DIR"/src/mscalindt/lock \
+    "$DIR"/src/mscalindt/logins.db \
     "$DIR"/src/mscalindt/permissions.sqlite \
     "$DIR"/src/mscalindt/pkcs11.txt \
     "$DIR"/src/mscalindt/places.sqlite \
@@ -313,11 +440,17 @@ rm -rf \
     "$DIR"/src/mscalindt/protections.sqlite \
     "$DIR"/src/mscalindt/sessionCheckpoints.json \
     "$DIR"/src/mscalindt/sessionstore.jsonlz4 \
+    "$DIR"/src/mscalindt/SiteSecurityServiceState.bin \
     "$DIR"/src/mscalindt/storage-sync-v2.sqlite \
     "$DIR"/src/mscalindt/storage.sqlite \
+    "$DIR"/src/mscalindt/suggest.sqlite \
+    "$DIR"/src/mscalindt/suggest.sqlite-shm \
+    "$DIR"/src/mscalindt/suggest.sqlite-wal \
+    "$DIR"/src/mscalindt/webappsstore.sqlite \
+    "$DIR"/src/mscalindt/webappsstore.sqlite-wal \
     "$DIR"/src/mscalindt/xulstore.json
 
-# cfg
+# Our configuration.
 [ ! -e "$DIR"/src/mscalindt/chrome ] && mkdir "$DIR"/src/mscalindt/chrome || :
 printf "%s" \
 '/* Remove close button from tabs */
@@ -334,6 +467,17 @@ printf "%s" \
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* Remove navigation controls from the context menu */
+#context-navigation,
+#context-sep-navigation {
+  display: none !important;
+}
+
+/* Remove "Print Selection" from the context menu */
+#context-print-selection {
+  display: none !important;
+}
 ' > "$DIR"/src/mscalindt/chrome/userChrome.css
 printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
@@ -345,33 +489,119 @@ user_pref("browser.aboutConfig.showWarning", false);
 user_pref("browser.aboutwelcome.enabled", false);
 user_pref("browser.cache.disk.enable", false);
 user_pref("browser.cache.memory.enable", false);
+user_pref("browser.contentblocking.category", "strict");
+user_pref("browser.display.document_color_use", 0);
+user_pref("browser.display.use_document_fonts", 0);
+user_pref("browser.download.dir", "/tmp");
+user_pref("browser.download.folderList", 2);
 user_pref("browser.download.start_downloads_in_tmp_dir", true);
+user_pref("browser.ipProtection.enabled", false);
+user_pref("browser.ipProtection.autoStartEnabled", false);
+user_pref("browser.ipProtection.autoStartPrivateEnabled", false);
+user_pref("browser.ipProtection.autoRestoreEnabled", false);
+user_pref("browser.ipProtection.userEnabled", false);
 user_pref("browser.laterrun.enabled", false);
 user_pref("browser.ml.chat.enabled", false);
+user_pref("browser.ml.chat.menu", false);
 user_pref("browser.ml.chat.page", false);
 user_pref("browser.ml.enable", false);
 user_pref("browser.ml.linkPreview.enabled", false);
+user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
+user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("browser.newtabpage.activity-stream.showSponsoredCheckboxes", false);
+user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
+user_pref("browser.newtabpage.activity-stream.system.showWeatherOptIn", false);
 user_pref("browser.places.speculativeConnect.enabled", false);
+user_pref("browser.preferences.experimental.hidden", false);
 user_pref("browser.safebrowsing.allowOverride", false);
 user_pref("browser.safebrowsing.blockedURIs.enabled", false);
 user_pref("browser.safebrowsing.downloads.enabled", false);
 user_pref("browser.safebrowsing.downloads.remote.enabled", false);
+user_pref("browser.safebrowsing.malware.enabled", false);
+user_pref("browser.safebrowsing.phishing.enabled", false);
 user_pref("browser.sessionstore.interval", 120000);
 user_pref("browser.sessionstore.max_tabs_undo", 5);
 user_pref("browser.sessionstore.privacy_level", 2);
+user_pref("browser.startup.page", 3);
 user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);
+user_pref("browser.tabs.groups.smart.enabled", false);
+user_pref("browser.tabs.groups.smart.userEnabled", false);
+user_pref("browser.theme.content-theme", 0);
+user_pref("browser.theme.toolbar-theme", 0);
+user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"ublock0_raymondhill_net-browser-action\",\"canvasblocker_kkapsner_de-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"developer-button\",\"screenshot-button\",\"canvasblocker_kkapsner_de-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"vertical-tabs\",\"PersonalToolbar\",\"TabsToolbar\",\"unified-extensions-area\",\"toolbar-menubar\"],\"currentVersion\":23,\"newElementCount\":3}");
+user_pref("browser.uidensity", 1);
+user_pref("browser.urlbar.placeholderName", "DuckDuckGo");
+user_pref("browser.urlbar.placeholderName.private", "DuckDuckGo");
+user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
+user_pref("browser.urlbar.suggest.engines", false);
+user_pref("browser.urlbar.suggest.openpage", false);
+user_pref("browser.urlbar.suggest.quickactions", false);
+user_pref("browser.urlbar.suggest.recentsearches", false);
+user_pref("browser.warnOnQuitShortcut", false);
+user_pref("datareporting.healthreport.uploadEnabled", false);
 user_pref("datareporting.policy.dataSubmissionEnabled", false);
+user_pref("datareporting.usage.uploadEnabled", false);
+user_pref("devtools.accessibility.enabled", false);
+user_pref("doh-rollout.disable-heuristics", true);
+user_pref("dom.security.https_only_mode", true);
+user_pref("dom.security.https_only_mode_ever_enabled", true);
 user_pref("dom.serviceWorkers.enabled", false);
+user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
+user_pref("extensions.formautofill.addresses.enabled", false);
+user_pref("extensions.formautofill.creditCards.enabled", false);
+user_pref("extensions.ml.enabled", false);
 user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides", false);
+user_pref("extensions.ui.dictionary.hidden", true);
+user_pref("extensions.ui.extension.hidden", false);
+user_pref("extensions.ui.locale.hidden", true);
+user_pref("extensions.ui.mlmodel.hidden", true);
+user_pref("extensions.ui.sitepermission.hidden", true);
+user_pref("extensions.webcompat.enable_shims", true);
+user_pref("extensions.webcompat.perform_injections", true);
+user_pref("font.default.x-cyrillic", "sans-serif");
+user_pref("font.default.x-western", "sans-serif");
+user_pref("font.language.group", "x-western");
+user_pref("font.minimum-size.x-cyrillic", 13);
+user_pref("font.minimum-size.x-western", 13);
+user_pref("font.name.monospace.x-cyrillic", "Source Code Pro");
+user_pref("font.name.monospace.x-western", "Source Code Pro");
+user_pref("font.size.monospace.x-cyrillic", 13);
+user_pref("font.size.monospace.x-western", 13);
+user_pref("media.autoplay.default", 5);
+user_pref("media.eme.enabled", true);
 user_pref("media.navigator.enabled", false);
 user_pref("media.peerconnection.enabled", false);
 user_pref("media.videocontrols.picture-in-picture.enabled", false);
+user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);
 user_pref("mousebutton.4th.enabled", false);
 user_pref("mousebutton.5th.enabled", false);
 user_pref("mousewheel.min_line_scroll_amount", 15);
+user_pref("nimbus.telemetry.targetingContextEnabled", false);
+user_pref("network.dns.disablePrefetch", true);
 user_pref("network.http.speculative-parallel-limit", 0);
+user_pref("network.lna.blocking", true);
+user_pref("network.lna.block_trackers", true);
+user_pref("network.lna.enabled", true);
+user_pref("network.predictor.enabled", false);
+user_pref("network.prefetch-next", false);
+user_pref("network.proxy.socks5_remote_dns", false);
+user_pref("network.trr.mode", 5);
+user_pref("permissions.default.desktop-notification", 2);
+user_pref("permissions.default.xr", 2);
+user_pref("privacy.bounceTrackingProtection.mode", 1);
+user_pref("privacy.globalprivacycontrol.enabled", true);
+user_pref("privacy.trackingprotection.allow_list.baseline.enabled", false);
+user_pref("privacy.trackingprotection.enabled", true);
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("screenshots.browser.component.enabled", false);
+user_pref("security.OCSP.enabled", 0);
+user_pref("sidebar.visibility", "hide-sidebar");
+user_pref("signon.management.page.breach-alerts.enabled", false);
+user_pref("signon.rememberSignons", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
+user_pref("trailhead.firstrun.didSeeAboutWelcome", true);
 ' > "$DIR"/src/mscalindt/user.js
