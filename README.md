@@ -1,3 +1,6 @@
+![look](docs/look_20260403/01.png)
+
+```
 20260403 149.0
 
 - release.sh
@@ -19,3 +22,4 @@ Third-party software is bundled:
 - https://github.com/gorhill/uBlock
     - GPL-3.0-only
     - (third-party-licenses/uBlock/LICENSE.txt)
+```
