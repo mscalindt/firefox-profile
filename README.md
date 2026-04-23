@@ -1,13 +1,17 @@
 ![look](docs/look_20260403/01.png)
 
 ```
-20260403 149.0
+20260424 150.0
 
 - release.sh
     -> chrome/userChrome.css
     -> prefs.js
     -> user.js
 - extensions/
+
+Note: Extension configuration data is not being saved anymore; extensions will
+run with defaults. If desired, configure manually according to docs/conf after
+profile installation.
 
 Upon launch, Google's Widevine CDM and Cisco's OpenH264 plugins
 should get installed automatically.

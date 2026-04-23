@@ -55,6 +55,7 @@ CLEANED_PREFS=$(
             'user_pref("browser.display.use_document_fonts", 0);' | \
             'user_pref("browser.download.dir", "/tmp");' | \
             'user_pref("browser.download.folderList", 2);' | \
+            'user_pref("browser.download.open_pdf_attachments_inline", true);' | \
             'user_pref("browser.download.start_downloads_in_tmp_dir", true);' | \
             'user_pref("browser.ipProtection.enabled", false);' | \
             'user_pref("browser.ipProtection.autoStartEnabled", false);' | \
@@ -88,6 +89,7 @@ CLEANED_PREFS=$(
             'user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);' | \
             'user_pref("browser.tabs.groups.smart.enabled", false);' | \
             'user_pref("browser.tabs.groups.smart.userEnabled", false);' | \
+            'user_pref("browser.tabs.splitView.enabled", false);' | \
             'user_pref("browser.theme.content-theme", 0);' | \
             'user_pref("browser.theme.toolbar-theme", 0);' | \
             'user_pref("browser.toolbars.bookmarks.visibility", "never");' | \
@@ -309,10 +311,12 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.last_update_seconds"'* | \
             'user_pref("services.settings.main.addons-data-leak-blocker-domains.last_check"'* | \
             'user_pref("services.settings.main.addons-manager-settings.last_check"'* | \
+            'user_pref("services.settings.main.ai-window-prompts.last_check"'* | \
             'user_pref("services.settings.main.anti-tracking-url-decoration.last_check"'* | \
             'user_pref("services.settings.main.bounce-tracking-protection-exceptions.last_check"'* | \
             'user_pref("services.settings.main.cfr.last_check"'* | \
             'user_pref("services.settings.main.cookie-banner-rules-list.last_check"'* | \
+            'user_pref("services.settings.main.crash-reports-ondemand.last_check"'* | \
             'user_pref("services.settings.main.devtools-compatibility-browsers.last_check"'* | \
             'user_pref("services.settings.main.devtools-devices.last_check"'* | \
             'user_pref("services.settings.main.doh-config.last_check"'* | \
@@ -417,6 +421,8 @@ rm -rf \
     "$DIR"/src/mscalindt/broadcast-listeners.json \
     "$DIR"/src/mscalindt/cert9.db \
     "$DIR"/src/mscalindt/cert_override.txt \
+    "$DIR"/src/mscalindt/chat-store.sqlite \
+    "$DIR"/src/mscalindt/chat-store.sqlite-wal \
     "$DIR"/src/mscalindt/compatibility.ini \
     "$DIR"/src/mscalindt/containers.json \
     "$DIR"/src/mscalindt/content-prefs.sqlite \
@@ -494,6 +500,7 @@ user_pref("browser.display.document_color_use", 0);
 user_pref("browser.display.use_document_fonts", 0);
 user_pref("browser.download.dir", "/tmp");
 user_pref("browser.download.folderList", 2);
+user_pref("browser.download.open_pdf_attachments_inline", true);
 user_pref("browser.download.start_downloads_in_tmp_dir", true);
 user_pref("browser.ipProtection.enabled", false);
 user_pref("browser.ipProtection.autoStartEnabled", false);
@@ -527,6 +534,7 @@ user_pref("browser.startup.page", 3);
 user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("browser.tabs.groups.smart.userEnabled", false);
+user_pref("browser.tabs.splitView.enabled", false);
 user_pref("browser.theme.content-theme", 0);
 user_pref("browser.theme.toolbar-theme", 0);
 user_pref("browser.toolbars.bookmarks.visibility", "never");

@@ -12,11 +12,13 @@
 user_pref("browser.bookmarks.addedImportButton", true);
 user_pref("browser.bookmarks.restore_default_bookmarks", false);
 user_pref("browser.compactmode.show", true);
+user_pref("browser.laterrun.enabled", true);
 user_pref("browser.proton.toolbar.version", 3);
 user_pref("doh-rollout.doneFirstRun", true);
 user_pref("dom.forms.autocomplete.formautofill", true);
 user_pref("extensions.pendingOperations", false);
 user_pref("extensions.signatureCheckpoint", 1);
+user_pref("extensions.ui.plugin.hidden", false);
 user_pref("extensions.webextensions.ExtensionStorageIDB.migrated.CanvasBlocker@kkapsner.de", true);
 user_pref("extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net", true);
 user_pref("extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}", true);
