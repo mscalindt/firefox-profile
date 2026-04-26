@@ -1,2 +1,5 @@
 rel:
-	sh ./release.sh
+	sh ./scripts/release.sh
+
+srcs:
+	sh ./scripts/srcs.sh

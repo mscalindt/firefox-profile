@@ -26,8 +26,7 @@
 
 set -e
 
-DIR="$(cd "${0%/*}" && printf "%s" "$PWD")"
-PREFS="$DIR"/src/mscalindt/prefs.js
+PREFS=./src/mscalindt/prefs.js
 
 # This only cleans prefs.js; it is not supposed to actually induce any
 # configuration modification.
@@ -400,64 +399,64 @@ if [ "$CLEANED_PREFS" ]; then
     printf "%s\n" "$CLEANED_PREFS" > "$PREFS"
 fi
 rm -rf \
-    "$DIR"/src/mscalindt/bookmarkbackups \
-    "$DIR"/src/mscalindt/crashes \
-    "$DIR"/src/mscalindt/datareporting \
-    "$DIR"/src/mscalindt/extension-store \
-    "$DIR"/src/mscalindt/extension-store-menus \
-    "$DIR"/src/mscalindt/gmp-gmpopenh264 \
-    "$DIR"/src/mscalindt/gmp-widevinecdm \
-    "$DIR"/src/mscalindt/minidumps \
-    "$DIR"/src/mscalindt/saved-telemetry-pings \
-    "$DIR"/src/mscalindt/security_state \
-    "$DIR"/src/mscalindt/sessionstore-backups \
-    "$DIR"/src/mscalindt/sessionstore-logs \
-    "$DIR"/src/mscalindt/settings \
-    "$DIR"/src/mscalindt/storage \
-    "$DIR"/src/mscalindt/.parentlock \
-    "$DIR"/src/mscalindt/addonStartup.json.lz4 \
-    "$DIR"/src/mscalindt/AlternateServices.bin \
-    "$DIR"/src/mscalindt/bounce-tracking-protection.sqlite \
-    "$DIR"/src/mscalindt/broadcast-listeners.json \
-    "$DIR"/src/mscalindt/cert9.db \
-    "$DIR"/src/mscalindt/cert_override.txt \
-    "$DIR"/src/mscalindt/chat-store.sqlite \
-    "$DIR"/src/mscalindt/chat-store.sqlite-wal \
-    "$DIR"/src/mscalindt/compatibility.ini \
-    "$DIR"/src/mscalindt/containers.json \
-    "$DIR"/src/mscalindt/content-prefs.sqlite \
-    "$DIR"/src/mscalindt/cookies.sqlite \
-    "$DIR"/src/mscalindt/cookies.sqlite-wal \
-    "$DIR"/src/mscalindt/domain_to_categories.sqlite \
-    "$DIR"/src/mscalindt/domain_to_categories.sqlite-journal \
-    "$DIR"/src/mscalindt/enumerate_devices.txt \
-    "$DIR"/src/mscalindt/ExperimentStoreData.json \
-    "$DIR"/src/mscalindt/favicons.sqlite \
-    "$DIR"/src/mscalindt/favicons.sqlite-wal \
-    "$DIR"/src/mscalindt/formhistory.sqlite \
-    "$DIR"/src/mscalindt/handlers.json \
-    "$DIR"/src/mscalindt/key4.db \
-    "$DIR"/src/mscalindt/lock \
-    "$DIR"/src/mscalindt/logins.db \
-    "$DIR"/src/mscalindt/permissions.sqlite \
-    "$DIR"/src/mscalindt/pkcs11.txt \
-    "$DIR"/src/mscalindt/places.sqlite \
-    "$DIR"/src/mscalindt/places.sqlite-wal \
-    "$DIR"/src/mscalindt/protections.sqlite \
-    "$DIR"/src/mscalindt/sessionCheckpoints.json \
-    "$DIR"/src/mscalindt/sessionstore.jsonlz4 \
-    "$DIR"/src/mscalindt/SiteSecurityServiceState.bin \
-    "$DIR"/src/mscalindt/storage-sync-v2.sqlite \
-    "$DIR"/src/mscalindt/storage.sqlite \
-    "$DIR"/src/mscalindt/suggest.sqlite \
-    "$DIR"/src/mscalindt/suggest.sqlite-shm \
-    "$DIR"/src/mscalindt/suggest.sqlite-wal \
-    "$DIR"/src/mscalindt/webappsstore.sqlite \
-    "$DIR"/src/mscalindt/webappsstore.sqlite-wal \
-    "$DIR"/src/mscalindt/xulstore.json
+    ./src/mscalindt/bookmarkbackups \
+    ./src/mscalindt/crashes \
+    ./src/mscalindt/datareporting \
+    ./src/mscalindt/extension-store \
+    ./src/mscalindt/extension-store-menus \
+    ./src/mscalindt/gmp-gmpopenh264 \
+    ./src/mscalindt/gmp-widevinecdm \
+    ./src/mscalindt/minidumps \
+    ./src/mscalindt/saved-telemetry-pings \
+    ./src/mscalindt/security_state \
+    ./src/mscalindt/sessionstore-backups \
+    ./src/mscalindt/sessionstore-logs \
+    ./src/mscalindt/settings \
+    ./src/mscalindt/storage \
+    ./src/mscalindt/.parentlock \
+    ./src/mscalindt/addonStartup.json.lz4 \
+    ./src/mscalindt/AlternateServices.bin \
+    ./src/mscalindt/bounce-tracking-protection.sqlite \
+    ./src/mscalindt/broadcast-listeners.json \
+    ./src/mscalindt/cert9.db \
+    ./src/mscalindt/cert_override.txt \
+    ./src/mscalindt/chat-store.sqlite \
+    ./src/mscalindt/chat-store.sqlite-wal \
+    ./src/mscalindt/compatibility.ini \
+    ./src/mscalindt/containers.json \
+    ./src/mscalindt/content-prefs.sqlite \
+    ./src/mscalindt/cookies.sqlite \
+    ./src/mscalindt/cookies.sqlite-wal \
+    ./src/mscalindt/domain_to_categories.sqlite \
+    ./src/mscalindt/domain_to_categories.sqlite-journal \
+    ./src/mscalindt/enumerate_devices.txt \
+    ./src/mscalindt/ExperimentStoreData.json \
+    ./src/mscalindt/favicons.sqlite \
+    ./src/mscalindt/favicons.sqlite-wal \
+    ./src/mscalindt/formhistory.sqlite \
+    ./src/mscalindt/handlers.json \
+    ./src/mscalindt/key4.db \
+    ./src/mscalindt/lock \
+    ./src/mscalindt/logins.db \
+    ./src/mscalindt/permissions.sqlite \
+    ./src/mscalindt/pkcs11.txt \
+    ./src/mscalindt/places.sqlite \
+    ./src/mscalindt/places.sqlite-wal \
+    ./src/mscalindt/protections.sqlite \
+    ./src/mscalindt/sessionCheckpoints.json \
+    ./src/mscalindt/sessionstore.jsonlz4 \
+    ./src/mscalindt/SiteSecurityServiceState.bin \
+    ./src/mscalindt/storage-sync-v2.sqlite \
+    ./src/mscalindt/storage.sqlite \
+    ./src/mscalindt/suggest.sqlite \
+    ./src/mscalindt/suggest.sqlite-shm \
+    ./src/mscalindt/suggest.sqlite-wal \
+    ./src/mscalindt/webappsstore.sqlite \
+    ./src/mscalindt/webappsstore.sqlite-wal \
+    ./src/mscalindt/xulstore.json
 
 # Our configuration.
-[ ! -e "$DIR"/src/mscalindt/chrome ] && mkdir "$DIR"/src/mscalindt/chrome || :
+[ ! -e ./src/mscalindt/chrome ] && mkdir ./src/mscalindt/chrome || :
 printf "%s" \
 '/* Remove close button from tabs */
 .tabbrowser-tab:not([pinned]) .tab-close-button { display:none !important; }
@@ -484,7 +483,7 @@ printf "%s" \
 #context-print-selection {
   display: none !important;
 }
-' > "$DIR"/src/mscalindt/chrome/userChrome.css
+' > ./src/mscalindt/chrome/userChrome.css
 printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
 user_pref("app.normandy.enabled", false);
@@ -612,4 +611,4 @@ user_pref("signon.rememberSignons", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 user_pref("trailhead.firstrun.didSeeAboutWelcome", true);
-' > "$DIR"/src/mscalindt/user.js
+' > ./src/mscalindt/user.js

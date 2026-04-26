@@ -3,7 +3,7 @@
 ```
 20260424 150.0
 
-- release.sh
+- scripts/release.sh
     -> chrome/userChrome.css
     -> prefs.js
     -> user.js
