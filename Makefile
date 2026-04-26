@@ -1,3 +1,5 @@
+.PHONY: rel srcs
+
 rel:
 	sh ./scripts/release.sh
 
