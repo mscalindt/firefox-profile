@@ -39,6 +39,6 @@ to general usage, safe to remove:
 ```
 
 Quick download extension links:
-- [CanvasBlocker](https://addons.mozilla.org/firefox/downloads/latest/canvasblocker/latest.xpi)
-- [Get cookies.txt LOCALLY](https://addons.mozilla.org/firefox/downloads/latest/get-cookies-txt-locally/latest.xpi)
-- [uBlock Origin](https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi)
+- [CanvasBlocker](https://addons.mozilla.org/firefox/downloads/latest/canvasblocker)
+- [Get cookies.txt LOCALLY](https://addons.mozilla.org/firefox/downloads/latest/get-cookies-txt-locally)
+- [uBlock Origin](https://addons.mozilla.org/firefox/downloads/latest/ublock-origin)
