@@ -1,9 +1,9 @@
 # Create a new profile using any Firefox instance and run this script on it:
-# -> create the profile
-# -> run the script on the profile
-# -> start the profile, maybe do some manual configuration (DOCUMENT IT)
+# -> just create the profile
+# -> run the script on the profile first
+# -> run the profile
 # -> exit the profile by clearing all its data using the Firefox instance
-# -> run the script on the profile
+# -> run the script on the profile again
 # -> the profile directory is now the new src/
 #
 # CONTROVERSIAL CONFIGURATION:
@@ -28,18 +28,14 @@ set -e
 
 PREFS=./src/mscalindt/prefs.js
 
-# This only cleans prefs.js; it is not supposed to actually induce any
-# configuration modification.
+# This only cleans prefs.js; no configuration modification is expected.
 if [ -f "$PREFS" ]; then
 CLEANED_PREFS=$(
     while IFS= read -r LINE; do
         case "$LINE" in
-            # REMOVE OUR CONFIGURED VALUES, FOR DIFF FOR NEW PROFILES FOR NEW
-            # (UNHANDLED) STRINGS/CONFIGURATION
-            #
-            # FIREFOX MAY (HARD) OVERRIDE OUR CONFIGURATION, SO IT IS "FINE" IF
-            # VALUES, LIKE `browser.laterrun.enabled`, DO NOT MATCH OUR AND IN
-            # TURN REMAIN IN prefs.js REGARDLESS
+            # Remove values matching our user.js configuration. Some values
+            # may not match our configuration due to hardcoded overrides; they
+            # will remain in prefs.js as-is.
             'user_pref("accessibility.force_disabled", 1);' | \
             'user_pref("app.normandy.enabled", false);' | \
             'user_pref("app.normandy.first_run", false);' | \
@@ -55,7 +51,6 @@ CLEANED_PREFS=$(
             'user_pref("browser.download.dir", "/tmp");' | \
             'user_pref("browser.download.folderList", 2);' | \
             'user_pref("browser.download.open_pdf_attachments_inline", true);' | \
-            'user_pref("browser.download.start_downloads_in_tmp_dir", true);' | \
             'user_pref("browser.ipProtection.enabled", false);' | \
             'user_pref("browser.ipProtection.autoStartEnabled", false);' | \
             'user_pref("browser.ipProtection.autoStartPrivateEnabled", false);' | \
@@ -69,10 +64,13 @@ CLEANED_PREFS=$(
             'user_pref("browser.ml.linkPreview.enabled", false);' | \
             'user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);' | \
             'user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);' | \
             'user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);' | \
             'user_pref("browser.newtabpage.activity-stream.showSponsoredCheckboxes", false);' | \
             'user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);' | \
             'user_pref("browser.newtabpage.activity-stream.system.showWeatherOptIn", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.telemetry", false);' | \
+            'user_pref("browser.nova.enabled", false);' | \
             'user_pref("browser.places.speculativeConnect.enabled", false);' | \
             'user_pref("browser.preferences.experimental.hidden", false);' | \
             'user_pref("browser.safebrowsing.allowOverride", false);' | \
@@ -82,20 +80,19 @@ CLEANED_PREFS=$(
             'user_pref("browser.safebrowsing.malware.enabled", false);' | \
             'user_pref("browser.safebrowsing.phishing.enabled", false);' | \
             'user_pref("browser.sessionstore.interval", 120000);' | \
-            'user_pref("browser.sessionstore.max_tabs_undo", 5);' | \
+            'user_pref("browser.sessionstore.max_tabs_undo", 10);' | \
             'user_pref("browser.sessionstore.privacy_level", 2);' | \
             'user_pref("browser.startup.page", 3);' | \
             'user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);' | \
+            'user_pref("browser.tabs.groups.enabled", false);' | \
             'user_pref("browser.tabs.groups.smart.enabled", false);' | \
             'user_pref("browser.tabs.groups.smart.userEnabled", false);' | \
             'user_pref("browser.tabs.splitView.enabled", false);' | \
             'user_pref("browser.theme.content-theme", 0);' | \
             'user_pref("browser.theme.toolbar-theme", 0);' | \
             'user_pref("browser.toolbars.bookmarks.visibility", "never");' | \
-            'user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"ublock0_raymondhill_net-browser-action\",\"canvasblocker_kkapsner_de-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"developer-button\",\"screenshot-button\",\"canvasblocker_kkapsner_de-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"vertical-tabs\",\"PersonalToolbar\",\"TabsToolbar\",\"unified-extensions-area\",\"toolbar-menubar\"],\"currentVersion\":23,\"newElementCount\":3}");' | \
+            'user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":26,\"newElementCount\":5}");' | \
             'user_pref("browser.uidensity", 1);' | \
-            'user_pref("browser.urlbar.placeholderName", "DuckDuckGo");' | \
-            'user_pref("browser.urlbar.placeholderName.private", "DuckDuckGo");' | \
             'user_pref("browser.urlbar.showSearchSuggestionsFirst", false);' | \
             'user_pref("browser.urlbar.speculativeConnect.enabled", false);' | \
             'user_pref("browser.urlbar.suggest.engines", false);' | \
@@ -108,6 +105,7 @@ CLEANED_PREFS=$(
             'user_pref("datareporting.usage.uploadEnabled", false);' | \
             'user_pref("devtools.accessibility.enabled", false);' | \
             'user_pref("doh-rollout.disable-heuristics", true);' | \
+            'user_pref("dom.allow_cut_copy", false);' | \
             'user_pref("dom.security.https_only_mode", true);' | \
             'user_pref("dom.security.https_only_mode_ever_enabled", true);' | \
             'user_pref("dom.serviceWorkers.enabled", false);' | \
@@ -132,12 +130,13 @@ CLEANED_PREFS=$(
             'user_pref("font.name.monospace.x-western", "Source Code Pro");' | \
             'user_pref("font.size.monospace.x-cyrillic", 13);' | \
             'user_pref("font.size.monospace.x-western", 13);' | \
+            'user_pref("general.smoothScroll", false);' | \
             'user_pref("media.autoplay.default", 5);' | \
-            'user_pref("media.eme.enabled", true);' | \
             'user_pref("media.navigator.enabled", false);' | \
             'user_pref("media.peerconnection.enabled", false);' | \
             'user_pref("media.videocontrols.picture-in-picture.enabled", false);' | \
             'user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);' | \
+            'user_pref("middlemouse.paste", false);' | \
             'user_pref("mousebutton.4th.enabled", false);' | \
             'user_pref("mousebutton.5th.enabled", false);' | \
             'user_pref("mousewheel.min_line_scroll_amount", 15);' | \
@@ -148,6 +147,7 @@ CLEANED_PREFS=$(
             'user_pref("network.lna.enabled", true);' | \
             'user_pref("network.predictor.enabled", false);' | \
             'user_pref("network.prefetch-next", false);' | \
+            'user_pref("network.protocol-handler.external.mailto", false);' | \
             'user_pref("network.proxy.socks5_remote_dns", false);' | \
             'user_pref("network.trr.mode", 5);' | \
             'user_pref("nimbus.telemetry.targetingContextEnabled", false);' | \
@@ -164,17 +164,21 @@ CLEANED_PREFS=$(
             'user_pref("signon.management.page.breach-alerts.enabled", false);' | \
             'user_pref("signon.rememberSignons", false);' | \
             'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' | \
+            'user_pref("toolkit.telemetry.archive.enabled", false);' | \
+            'user_pref("toolkit.telemetry.bhrPing.enabled", false);' | \
+            'user_pref("toolkit.telemetry.enabled", false);' | \
+            'user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);' | \
+            'user_pref("toolkit.telemetry.newProfilePing.enabled", false);' | \
             'user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);' | \
-            'user_pref("trailhead.firstrun.didSeeAboutWelcome", true);')
+            'user_pref("toolkit.telemetry.server", "");' | \
+            'user_pref("toolkit.telemetry.shutdownPingSender.enabled", false);' | \
+            'user_pref("toolkit.telemetry.unified", false);' | \
+            'user_pref("trailhead.firstrun.didSeeAboutWelcome", true);' | \
+            'user_pref("ui.key.menuAccessKey", 0);' | \
+            'user_pref("ui.key.menuAccessKeyFocuses", false);')
                 continue
             ;;
-            # IMPLICIT CONFIGURED VALUES
-            #
-            # THESE MAY HAVE TO EVENTUALLY BE EXPLICITLY CONFIGURED
-            'user_pref("privacy.trackingprotection.allow_list.convenience.enabled", false);')
-                continue
-            ;;
-            # THE GARBAGE THAT IS CLEANED:
+            # Stripped garbage values:
             'user_pref("app.normandy.migrationsApplied"'* | \
             'user_pref("app.normandy.user_id"'* | \
             'user_pref("app.update.lastUpdateTime.addon-background-update-timer"'* | \
@@ -207,6 +211,7 @@ CLEANED_PREFS=$(
             'user_pref("browser.migration.version"'* | \
             'user_pref("browser.ml.chat.nimbus"'* | \
             'user_pref("browser.newtabpage.activity-stream.impressionId"'* | \
+            'user_pref("browser.newtabpage.activity-stream.newtabWallpapers.user.enabled.migrated"'* | \
             'user_pref("browser.newtabpage.pinned"'* | \
             'user_pref("browser.newtabpage.storageVersion"'* | \
             'user_pref("browser.pageActions.persistedActions"'* | \
@@ -290,6 +295,8 @@ CLEANED_PREFS=$(
             'user_pref("media.gmp-widevinecdm.version"'* | \
             'user_pref("media.gmp.storage.version.observed"'* | \
             'user_pref("network.cookie.CHIPS.lastMigrateDatabase"'* | \
+            'user_pref("network.cookie.validation.lastEpoch"'* | \
+            'user_pref("nimbus.firstUpdateComplete"'* | \
             'user_pref("nimbus.migrations.after-remote-settings-update"'* | \
             'user_pref("nimbus.migrations.after-store-initialized"'* | \
             'user_pref("nimbus.migrations.init-started"'* | \
@@ -303,6 +310,7 @@ CLEANED_PREFS=$(
             'user_pref("privacy.purge_trackers.last_purge"'* | \
             'user_pref("privacy.trackingprotection.allow_list.hasMigratedCategoryPrefs"'* | \
             'user_pref("security.sandbox.content.tempDirSuffix"'* | \
+            'user_pref("services.settings.base_attachments_url"'* | \
             'user_pref("services.settings.blocklists.addons-bloomfilters.last_check"'* | \
             'user_pref("services.settings.blocklists.gfx.last_check"'* | \
             'user_pref("services.settings.clock_skew_seconds"'* | \
@@ -326,8 +334,11 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.main.language-dictionaries.last_check"'* | \
             'user_pref("services.settings.main.message-groups.last_check"'* | \
             'user_pref("services.settings.main.moz-essential-domain-fallbacks.last_check"'* | \
+            'user_pref("services.settings.main.ms-action-allowlists.last_check"'* | \
             'user_pref("services.settings.main.ms-language-packs.last_check"'* | \
             'user_pref("services.settings.main.newtab-frecency-boosted-sponsors.last_check"'* | \
+            'user_pref("services.settings.main.newtab-section-layouts.last_check"'* | \
+            'user_pref("services.settings.main.newtab-sections-ordering.last_check"'* | \
             'user_pref("services.settings.main.newtab-wallpapers-v2.last_check"'* | \
             'user_pref("services.settings.main.nimbus-desktop-experiments.last_check"'* | \
             'user_pref("services.settings.main.nimbus-secure-experiments.last_check"'* | \
@@ -376,6 +387,8 @@ CLEANED_PREFS=$(
             'user_pref("sidebar.nimbus"'* | \
             'user_pref("sidebar.notification.badge.aichat"'* | \
             'user_pref("signon.management.page.os-auth.optout"'* | \
+            'user_pref("signon.storage.rust.restoreAttemptsVersion"'* | \
+            'user_pref("signon.storage.rust.restoreVersion"'* | \
             'user_pref("storage.vacuum.last.content-prefs.sqlite"'* | \
             'user_pref("storage.vacuum.last.index"'* | \
             'user_pref("storage.vacuum.last.places.sqlite"'* | \
@@ -394,7 +407,7 @@ CLEANED_PREFS=$(
 )
 fi
 
-# Profile cleanup.
+# Profile directory cleanup.
 if [ "$CLEANED_PREFS" ]; then
     printf "%s\n" "$CLEANED_PREFS" > "$PREFS"
 fi
@@ -402,6 +415,7 @@ rm -rf \
     ./src/mscalindt/bookmarkbackups \
     ./src/mscalindt/crashes \
     ./src/mscalindt/datareporting \
+    ./src/mscalindt/extensions \
     ./src/mscalindt/extension-store \
     ./src/mscalindt/extension-store-menus \
     ./src/mscalindt/gmp-gmpopenh264 \
@@ -414,6 +428,7 @@ rm -rf \
     ./src/mscalindt/settings \
     ./src/mscalindt/storage \
     ./src/mscalindt/.parentlock \
+    ./src/mscalindt/addons.json \
     ./src/mscalindt/addonStartup.json.lz4 \
     ./src/mscalindt/AlternateServices.bin \
     ./src/mscalindt/bounce-tracking-protection.sqlite \
@@ -425,12 +440,16 @@ rm -rf \
     ./src/mscalindt/compatibility.ini \
     ./src/mscalindt/containers.json \
     ./src/mscalindt/content-prefs.sqlite \
+    ./src/mscalindt/content-prefs.sqlite-wal \
     ./src/mscalindt/cookies.sqlite \
     ./src/mscalindt/cookies.sqlite-wal \
     ./src/mscalindt/domain_to_categories.sqlite \
     ./src/mscalindt/domain_to_categories.sqlite-journal \
     ./src/mscalindt/enumerate_devices.txt \
     ./src/mscalindt/ExperimentStoreData.json \
+    ./src/mscalindt/extension-preferences.json \
+    ./src/mscalindt/extension-settings.json \
+    ./src/mscalindt/extensions.json \
     ./src/mscalindt/favicons.sqlite \
     ./src/mscalindt/favicons.sqlite-wal \
     ./src/mscalindt/formhistory.sqlite \
@@ -443,6 +462,7 @@ rm -rf \
     ./src/mscalindt/places.sqlite \
     ./src/mscalindt/places.sqlite-wal \
     ./src/mscalindt/protections.sqlite \
+    ./src/mscalindt/search.json.mozlz4 \
     ./src/mscalindt/sessionCheckpoints.json \
     ./src/mscalindt/sessionstore.jsonlz4 \
     ./src/mscalindt/SiteSecurityServiceState.bin \
@@ -483,6 +503,25 @@ printf "%s" \
 #context-print-selection {
   display: none !important;
 }
+
+/* Remove "Send to Mobile" from the context menu */
+#context-sendpagetodevice,
+#context-sep-sendpagetodevice,
+#context-sendlinktodevice,
+#context-sep-sendlinktodevice,
+#context_sendTabToDevice,
+#context_sendTabToDeviceSeparator {
+  display: none !important;
+}
+
+/* Remove rounded corners */
+:root {
+  --border-radius-small: 0 !important;
+  --border-radius-medium: 0 !important;
+  --border-radius-large: 0 !important;
+  --border-radius-xlarge: 0 !important;
+  --border-radius-circle: 0 !important;
+}
 ' > ./src/mscalindt/chrome/userChrome.css
 printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
@@ -500,7 +539,6 @@ user_pref("browser.display.use_document_fonts", 0);
 user_pref("browser.download.dir", "/tmp");
 user_pref("browser.download.folderList", 2);
 user_pref("browser.download.open_pdf_attachments_inline", true);
-user_pref("browser.download.start_downloads_in_tmp_dir", true);
 user_pref("browser.ipProtection.enabled", false);
 user_pref("browser.ipProtection.autoStartEnabled", false);
 user_pref("browser.ipProtection.autoStartPrivateEnabled", false);
@@ -514,10 +552,13 @@ user_pref("browser.ml.enable", false);
 user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
+user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredCheckboxes", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("browser.newtabpage.activity-stream.system.showWeatherOptIn", false);
+user_pref("browser.newtabpage.activity-stream.telemetry", false);
+user_pref("browser.nova.enabled", false);
 user_pref("browser.places.speculativeConnect.enabled", false);
 user_pref("browser.preferences.experimental.hidden", false);
 user_pref("browser.safebrowsing.allowOverride", false);
@@ -527,20 +568,19 @@ user_pref("browser.safebrowsing.downloads.remote.enabled", false);
 user_pref("browser.safebrowsing.malware.enabled", false);
 user_pref("browser.safebrowsing.phishing.enabled", false);
 user_pref("browser.sessionstore.interval", 120000);
-user_pref("browser.sessionstore.max_tabs_undo", 5);
+user_pref("browser.sessionstore.max_tabs_undo", 10);
 user_pref("browser.sessionstore.privacy_level", 2);
 user_pref("browser.startup.page", 3);
 user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);
+user_pref("browser.tabs.groups.enabled", false);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("browser.tabs.groups.smart.userEnabled", false);
 user_pref("browser.tabs.splitView.enabled", false);
 user_pref("browser.theme.content-theme", 0);
 user_pref("browser.theme.toolbar-theme", 0);
 user_pref("browser.toolbars.bookmarks.visibility", "never");
-user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"ublock0_raymondhill_net-browser-action\",\"canvasblocker_kkapsner_de-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"developer-button\",\"screenshot-button\",\"canvasblocker_kkapsner_de-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"_74145f27-f039-47ce-a470-a662b129930a_-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"vertical-tabs\",\"PersonalToolbar\",\"TabsToolbar\",\"unified-extensions-area\",\"toolbar-menubar\"],\"currentVersion\":23,\"newElementCount\":3}");
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":26,\"newElementCount\":5}");
 user_pref("browser.uidensity", 1);
-user_pref("browser.urlbar.placeholderName", "DuckDuckGo");
-user_pref("browser.urlbar.placeholderName.private", "DuckDuckGo");
 user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
 user_pref("browser.urlbar.suggest.engines", false);
@@ -553,6 +593,7 @@ user_pref("datareporting.policy.dataSubmissionEnabled", false);
 user_pref("datareporting.usage.uploadEnabled", false);
 user_pref("devtools.accessibility.enabled", false);
 user_pref("doh-rollout.disable-heuristics", true);
+user_pref("dom.allow_cut_copy", false);
 user_pref("dom.security.https_only_mode", true);
 user_pref("dom.security.https_only_mode_ever_enabled", true);
 user_pref("dom.serviceWorkers.enabled", false);
@@ -577,16 +618,16 @@ user_pref("font.name.monospace.x-cyrillic", "Source Code Pro");
 user_pref("font.name.monospace.x-western", "Source Code Pro");
 user_pref("font.size.monospace.x-cyrillic", 13);
 user_pref("font.size.monospace.x-western", 13);
+user_pref("general.smoothScroll", false);
 user_pref("media.autoplay.default", 5);
-user_pref("media.eme.enabled", true);
 user_pref("media.navigator.enabled", false);
 user_pref("media.peerconnection.enabled", false);
 user_pref("media.videocontrols.picture-in-picture.enabled", false);
 user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);
+user_pref("middlemouse.paste", false);
 user_pref("mousebutton.4th.enabled", false);
 user_pref("mousebutton.5th.enabled", false);
 user_pref("mousewheel.min_line_scroll_amount", 15);
-user_pref("nimbus.telemetry.targetingContextEnabled", false);
 user_pref("network.dns.disablePrefetch", true);
 user_pref("network.http.speculative-parallel-limit", 0);
 user_pref("network.lna.blocking", true);
@@ -594,8 +635,10 @@ user_pref("network.lna.block_trackers", true);
 user_pref("network.lna.enabled", true);
 user_pref("network.predictor.enabled", false);
 user_pref("network.prefetch-next", false);
+user_pref("network.protocol-handler.external.mailto", false);
 user_pref("network.proxy.socks5_remote_dns", false);
 user_pref("network.trr.mode", 5);
+user_pref("nimbus.telemetry.targetingContextEnabled", false);
 user_pref("permissions.default.desktop-notification", 2);
 user_pref("permissions.default.xr", 2);
 user_pref("privacy.bounceTrackingProtection.mode", 1);
@@ -609,6 +652,16 @@ user_pref("sidebar.visibility", "hide-sidebar");
 user_pref("signon.management.page.breach-alerts.enabled", false);
 user_pref("signon.rememberSignons", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("toolkit.telemetry.archive.enabled", false);
+user_pref("toolkit.telemetry.bhrPing.enabled", false);
+user_pref("toolkit.telemetry.enabled", false);
+user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);
+user_pref("toolkit.telemetry.newProfilePing.enabled", false);
 user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
+user_pref("toolkit.telemetry.server", "");
+user_pref("toolkit.telemetry.shutdownPingSender.enabled", false);
+user_pref("toolkit.telemetry.unified", false);
 user_pref("trailhead.firstrun.didSeeAboutWelcome", true);
+user_pref("ui.key.menuAccessKey", 0);
+user_pref("ui.key.menuAccessKeyFocuses", false);
 ' > ./src/mscalindt/user.js

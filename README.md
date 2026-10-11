@@ -1,29 +1,44 @@
-![look](docs/look_20260403/01.png)
+![raw_profile_look_before_suggested_config](docs/look_20261011/01.png)
 
 ```
-20260424 150.0
+20261011 157.0
 
-- scripts/release.sh
-    -> chrome/userChrome.css
-    -> prefs.js
-    -> user.js
-- extensions/
+- docs/conf_20261011 (suggested configuration to make after installation)
+- scripts/release.sh (source used to build the profile)
+  -> chrome/userChrome.css
+  -> prefs.js
+  -> user.js
 
-Note: Extension configuration data is not being saved anymore; extensions will
-run with defaults. If desired, configure manually according to docs/conf after
-profile installation.
+Note: On certain machines, this profile and/or its suggested
+configuration may result in more frequent captchas and their
+subsequent failures.
 
-Upon launch, Google's Widevine CDM and Cisco's OpenH264 plugins
-should get installed automatically.
+All distinct configuration files in the profile directory carried over
+interactive configuration (not made by release.sh):
+- customKeys.json
+- prefs.js (cleaned by release.sh)
+- shield-preference-experiments.json
+- times.json
 
-Third-party software is bundled:
-- https://github.com/kkapsner/CanvasBlocker/
-    - MPL-2.0
-    - (third-party-licenses/CanvasBlocker/LICENSE.txt)
-- https://github.com/ClearURLs/Addon
-    - LGPL-3.0-only
-    - (third-party-licenses/ClearURLs/LICENSE)
-- https://github.com/gorhill/uBlock
-    - GPL-3.0-only
-    - (third-party-licenses/uBlock/LICENSE.txt)
+Peculiar personalized configuration in user.js that might be intrusive
+to general usage, safe to remove:
+- browser.display.document_color_use
+- browser.display.use_document_fonts
+- browser.download.dir
+- browser.tabs.groups.enabled
+- browser.nova.enabled
+- browser.uidensity
+- extensions.activeThemeID
+- general.smoothScroll
+- middlemouse.paste
+- mousebutton.4th.enabled
+- mousebutton.5th.enabled
+- network.protocol-handler.external.mailto
+- ui.key.menuAccessKey
+- ui.key.menuAccessKeyFocuses
 ```
+
+Quick download extension links:
+- [CanvasBlocker](https://addons.mozilla.org/firefox/downloads/latest/canvasblocker/latest.xpi)
+- [Get cookies.txt LOCALLY](https://addons.mozilla.org/firefox/downloads/latest/get-cookies-txt-locally/latest.xpi)
+- [uBlock Origin](https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi)

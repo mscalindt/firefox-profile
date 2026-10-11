@@ -23,3 +23,22 @@
 #context-print-selection {
   display: none !important;
 }
+
+/* Remove "Send to Mobile" from the context menu */
+#context-sendpagetodevice,
+#context-sep-sendpagetodevice,
+#context-sendlinktodevice,
+#context-sep-sendlinktodevice,
+#context_sendTabToDevice,
+#context_sendTabToDeviceSeparator {
+  display: none !important;
+}
+
+/* Remove rounded corners */
+:root {
+  --border-radius-small: 0 !important;
+  --border-radius-medium: 0 !important;
+  --border-radius-large: 0 !important;
+  --border-radius-xlarge: 0 !important;
+  --border-radius-circle: 0 !important;
+}
