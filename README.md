@@ -21,10 +21,13 @@ interactive configuration (not made by release.sh):
 - times.json
 
 Peculiar personalized configuration in user.js that might be intrusive
-to general usage, safe to remove:
+to general usage, safe to remove/adjust:
+- browser.cache.disk.enable
+- browser.cache.memory.enable
 - browser.display.document_color_use
 - browser.display.use_document_fonts
 - browser.download.dir
+- browser.sessionstore.max_tabs_undo
 - browser.tabs.groups.enabled
 - browser.nova.enabled
 - browser.uidensity
