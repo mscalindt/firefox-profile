@@ -1,9 +1,9 @@
-![raw_profile_look_before_suggested_config](docs/look_20261011/01.png)
+![raw_profile_look_before_suggested_config](docs/20261011/look/01.png)
 
 ```
 20261011 157.0
 
-- docs/conf_20261011 (suggested configuration to make after installation)
+- docs/20261011/conf (suggested configuration to make after installation)
 - scripts/release.sh (source used to build the profile)
   -> chrome/userChrome.css
   -> prefs.js
