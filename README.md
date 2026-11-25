@@ -1,9 +1,9 @@
-![raw_profile_look_before_suggested_config](docs/20261011/look/01.png)
+![raw_profile_look_before_suggested_config](docs/20261125/look/01.png)
 
 ```
-20261011 157.0
+20261125 160.0
 
-- docs/20261011/conf (suggested configuration to make after installation)
+- docs/20261125/conf (suggested configuration to make after installation)
 - scripts/release.sh (source used to build the profile)
   -> chrome/userChrome.css
   -> prefs.js
@@ -17,7 +17,6 @@ All distinct configuration files in the profile directory carried over
 interactive configuration (not made by release.sh):
 - customKeys.json
 - prefs.js (cleaned by release.sh)
-- shield-preference-experiments.json
 - times.json
 
 Peculiar personalized configuration in user.js that might be intrusive

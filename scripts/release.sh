@@ -1,10 +1,11 @@
 # Create a new profile using any Firefox instance and run this script on it:
 # -> just create the profile
-# -> run the script on the profile first
+# -> run the script on the profile first (make PROFILE_DIR=<path> rel)
 # -> run the profile
 # -> exit the profile by clearing all its data using the Firefox instance
-# -> run the script on the profile again
-# -> the profile directory is now the new src/
+# -> copy the profile to src/ (make PROFILE_DIR=<path> copy)
+# -> run the script (`make`)
+# -> src/ is now the new release! try it (make PROFILE_DIR=<path> replace)
 #
 # CONTROVERSIAL CONFIGURATION:
 #
@@ -26,7 +27,7 @@
 
 set -e
 
-PREFS=./src/mscalindt/prefs.js
+PREFS="$1"/prefs.js
 
 # This only cleans prefs.js; no configuration modification is expected.
 if [ -f "$PREFS" ]; then
@@ -41,6 +42,7 @@ CLEANED_PREFS=$(
             'user_pref("app.normandy.first_run", false);' | \
             'user_pref("app.shield.optoutstudies.enabled", false);' | \
             'user_pref("app.update.auto", false);' | \
+            'user_pref("apz.one_touch_pinch.enabled", false);' | \
             'user_pref("browser.aboutConfig.showWarning", false);' | \
             'user_pref("browser.aboutwelcome.enabled", false);' | \
             'user_pref("browser.cache.disk.enable", false);' | \
@@ -82,6 +84,14 @@ CLEANED_PREFS=$(
             'user_pref("browser.sessionstore.interval", 120000);' | \
             'user_pref("browser.sessionstore.max_tabs_undo", 10);' | \
             'user_pref("browser.sessionstore.privacy_level", 2);' | \
+            'user_pref("browser.smartwindow.enabled", false);' | \
+            'user_pref("browser.smartwindow.endpoint", "");' | \
+            'user_pref("browser.smartwindow.firstrun.explainerURL", "");' | \
+            'user_pref("browser.smartwindow.searchQuery.endpointURL", "");' | \
+            'user_pref("browser.newtabpage.activity-stream.feeds.smartshortcutsfeed", false);' | \
+            'user_pref("browser.newtabpage.activity-stream.images.smart", false);' | \
+            'user_pref("browser.smartwindow.agent.enabled", false);' | \
+            'user_pref("browser.smartwindow.aitab.enabled", false);' | \
             'user_pref("browser.startup.page", 3);' | \
             'user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);' | \
             'user_pref("browser.tabs.groups.enabled", false);' | \
@@ -91,7 +101,7 @@ CLEANED_PREFS=$(
             'user_pref("browser.theme.content-theme", 0);' | \
             'user_pref("browser.theme.toolbar-theme", 0);' | \
             'user_pref("browser.toolbars.bookmarks.visibility", "never");' | \
-            'user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":26,\"newElementCount\":5}");' | \
+            'user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":28,\"newElementCount\":9}");' | \
             'user_pref("browser.uidensity", 1);' | \
             'user_pref("browser.urlbar.showSearchSuggestionsFirst", false);' | \
             'user_pref("browser.urlbar.speculativeConnect.enabled", false);' | \
@@ -355,6 +365,7 @@ CLEANED_PREFS=$(
             'user_pref("services.settings.main.search-config-overrides-v2.last_check"'* | \
             'user_pref("services.settings.main.search-config-overrides.last_check"'* | \
             'user_pref("services.settings.main.search-config-v2.last_check"'* | \
+            'user_pref("services.settings.main.search-config-v3.last_check"'* | \
             'user_pref("services.settings.main.search-config.last_check"'* | \
             'user_pref("services.settings.main.search-default-override-allowlist.last_check"'* | \
             'user_pref("services.settings.main.search-telemetry-v2.last_check"'* | \
@@ -412,71 +423,71 @@ if [ "$CLEANED_PREFS" ]; then
     printf "%s\n" "$CLEANED_PREFS" > "$PREFS"
 fi
 rm -rf \
-    ./src/mscalindt/bookmarkbackups \
-    ./src/mscalindt/crashes \
-    ./src/mscalindt/datareporting \
-    ./src/mscalindt/extensions \
-    ./src/mscalindt/extension-store \
-    ./src/mscalindt/extension-store-menus \
-    ./src/mscalindt/gmp-gmpopenh264 \
-    ./src/mscalindt/gmp-widevinecdm \
-    ./src/mscalindt/minidumps \
-    ./src/mscalindt/saved-telemetry-pings \
-    ./src/mscalindt/security_state \
-    ./src/mscalindt/sessionstore-backups \
-    ./src/mscalindt/sessionstore-logs \
-    ./src/mscalindt/settings \
-    ./src/mscalindt/storage \
-    ./src/mscalindt/.parentlock \
-    ./src/mscalindt/addons.json \
-    ./src/mscalindt/addonStartup.json.lz4 \
-    ./src/mscalindt/AlternateServices.bin \
-    ./src/mscalindt/bounce-tracking-protection.sqlite \
-    ./src/mscalindt/broadcast-listeners.json \
-    ./src/mscalindt/cert9.db \
-    ./src/mscalindt/cert_override.txt \
-    ./src/mscalindt/chat-store.sqlite \
-    ./src/mscalindt/chat-store.sqlite-wal \
-    ./src/mscalindt/compatibility.ini \
-    ./src/mscalindt/containers.json \
-    ./src/mscalindt/content-prefs.sqlite \
-    ./src/mscalindt/content-prefs.sqlite-wal \
-    ./src/mscalindt/cookies.sqlite \
-    ./src/mscalindt/cookies.sqlite-wal \
-    ./src/mscalindt/domain_to_categories.sqlite \
-    ./src/mscalindt/domain_to_categories.sqlite-journal \
-    ./src/mscalindt/enumerate_devices.txt \
-    ./src/mscalindt/ExperimentStoreData.json \
-    ./src/mscalindt/extension-preferences.json \
-    ./src/mscalindt/extension-settings.json \
-    ./src/mscalindt/extensions.json \
-    ./src/mscalindt/favicons.sqlite \
-    ./src/mscalindt/favicons.sqlite-wal \
-    ./src/mscalindt/formhistory.sqlite \
-    ./src/mscalindt/handlers.json \
-    ./src/mscalindt/key4.db \
-    ./src/mscalindt/lock \
-    ./src/mscalindt/logins.db \
-    ./src/mscalindt/permissions.sqlite \
-    ./src/mscalindt/pkcs11.txt \
-    ./src/mscalindt/places.sqlite \
-    ./src/mscalindt/places.sqlite-wal \
-    ./src/mscalindt/protections.sqlite \
-    ./src/mscalindt/search.json.mozlz4 \
-    ./src/mscalindt/sessionCheckpoints.json \
-    ./src/mscalindt/sessionstore.jsonlz4 \
-    ./src/mscalindt/SiteSecurityServiceState.bin \
-    ./src/mscalindt/storage-sync-v2.sqlite \
-    ./src/mscalindt/storage.sqlite \
-    ./src/mscalindt/suggest.sqlite \
-    ./src/mscalindt/suggest.sqlite-shm \
-    ./src/mscalindt/suggest.sqlite-wal \
-    ./src/mscalindt/webappsstore.sqlite \
-    ./src/mscalindt/webappsstore.sqlite-wal \
-    ./src/mscalindt/xulstore.json
+    "$1"/bookmarkbackups \
+    "$1"/crashes \
+    "$1"/datareporting \
+    "$1"/extensions \
+    "$1"/extension-store \
+    "$1"/extension-store-menus \
+    "$1"/gmp-gmpopenh264 \
+    "$1"/gmp-widevinecdm \
+    "$1"/minidumps \
+    "$1"/saved-telemetry-pings \
+    "$1"/security_state \
+    "$1"/sessionstore-backups \
+    "$1"/sessionstore-logs \
+    "$1"/settings \
+    "$1"/storage \
+    "$1"/.parentlock \
+    "$1"/addons.json \
+    "$1"/addonStartup.json.lz4 \
+    "$1"/AlternateServices.bin \
+    "$1"/bounce-tracking-protection.sqlite \
+    "$1"/broadcast-listeners.json \
+    "$1"/cert9.db \
+    "$1"/cert_override.txt \
+    "$1"/chat-store.sqlite \
+    "$1"/chat-store.sqlite-wal \
+    "$1"/compatibility.ini \
+    "$1"/containers.json \
+    "$1"/content-prefs.sqlite \
+    "$1"/content-prefs.sqlite-wal \
+    "$1"/cookies.sqlite \
+    "$1"/cookies.sqlite-wal \
+    "$1"/domain_to_categories.sqlite \
+    "$1"/domain_to_categories.sqlite-journal \
+    "$1"/enumerate_devices.txt \
+    "$1"/ExperimentStoreData.json \
+    "$1"/extension-preferences.json \
+    "$1"/extension-settings.json \
+    "$1"/extensions.json \
+    "$1"/favicons.sqlite \
+    "$1"/favicons.sqlite-wal \
+    "$1"/formhistory.sqlite \
+    "$1"/handlers.json \
+    "$1"/key4.db \
+    "$1"/lock \
+    "$1"/logins.db \
+    "$1"/permissions.sqlite \
+    "$1"/pkcs11.txt \
+    "$1"/places.sqlite \
+    "$1"/places.sqlite-wal \
+    "$1"/protections.sqlite \
+    "$1"/search.json.mozlz4 \
+    "$1"/sessionCheckpoints.json \
+    "$1"/sessionstore.jsonlz4 \
+    "$1"/SiteSecurityServiceState.bin \
+    "$1"/storage-sync-v2.sqlite \
+    "$1"/storage.sqlite \
+    "$1"/suggest.sqlite \
+    "$1"/suggest.sqlite-shm \
+    "$1"/suggest.sqlite-wal \
+    "$1"/webappsstore.sqlite \
+    "$1"/webappsstore.sqlite-wal \
+    "$1"/xulstore.json
 
 # Our configuration.
-[ ! -e ./src/mscalindt/chrome ] && mkdir ./src/mscalindt/chrome || :
+[ ! -e "$1"/chrome ] && mkdir "$1"/chrome || :
 printf "%s" \
 '/* Remove close button from tabs */
 .tabbrowser-tab:not([pinned]) .tab-close-button { display:none !important; }
@@ -522,13 +533,14 @@ printf "%s" \
   --border-radius-xlarge: 0 !important;
   --border-radius-circle: 0 !important;
 }
-' > ./src/mscalindt/chrome/userChrome.css
+' > "$1"/chrome/userChrome.css
 printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
 user_pref("app.normandy.enabled", false);
 user_pref("app.normandy.first_run", false);
 user_pref("app.shield.optoutstudies.enabled", false);
 user_pref("app.update.auto", false);
+user_pref("apz.one_touch_pinch.enabled", false);
 user_pref("browser.aboutConfig.showWarning", false);
 user_pref("browser.aboutwelcome.enabled", false);
 user_pref("browser.cache.disk.enable", false);
@@ -570,6 +582,14 @@ user_pref("browser.safebrowsing.phishing.enabled", false);
 user_pref("browser.sessionstore.interval", 120000);
 user_pref("browser.sessionstore.max_tabs_undo", 10);
 user_pref("browser.sessionstore.privacy_level", 2);
+user_pref("browser.smartwindow.enabled", false);
+user_pref("browser.smartwindow.endpoint", "");
+user_pref("browser.smartwindow.firstrun.explainerURL", "");
+user_pref("browser.smartwindow.searchQuery.endpointURL", "");
+user_pref("browser.newtabpage.activity-stream.feeds.smartshortcutsfeed", false);
+user_pref("browser.newtabpage.activity-stream.images.smart", false);
+user_pref("browser.smartwindow.agent.enabled", false);
+user_pref("browser.smartwindow.aitab.enabled", false);
 user_pref("browser.startup.page", 3);
 user_pref("browser.tabs.delayHidingAudioPlayingIconMS", 0);
 user_pref("browser.tabs.groups.enabled", false);
@@ -579,7 +599,7 @@ user_pref("browser.tabs.splitView.enabled", false);
 user_pref("browser.theme.content-theme", 0);
 user_pref("browser.theme.toolbar-theme", 0);
 user_pref("browser.toolbars.bookmarks.visibility", "never");
-user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":26,\"newElementCount\":5}");
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"vertical-spacer\",\"urlbar-container\",\"downloads-button\",\"reset-pbm-toolbar-button\",\"unified-extensions-button\",\"library-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\"],\"vertical-tabs\":[],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"reset-pbm-toolbar-button\",\"smartwindow-group-tabs-button\",\"ai-window-toggle\",\"developer-button\"],\"dirtyAreaCache\":[\"nav-bar\",\"TabsToolbar\",\"vertical-tabs\",\"PersonalToolbar\",\"toolbar-menubar\"],\"currentVersion\":28,\"newElementCount\":9}");
 user_pref("browser.uidensity", 1);
 user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
@@ -664,4 +684,4 @@ user_pref("toolkit.telemetry.unified", false);
 user_pref("trailhead.firstrun.didSeeAboutWelcome", true);
 user_pref("ui.key.menuAccessKey", 0);
 user_pref("ui.key.menuAccessKeyFocuses", false);
-' > ./src/mscalindt/user.js
+' > "$1"/user.js

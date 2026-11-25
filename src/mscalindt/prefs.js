@@ -11,7 +11,8 @@
 
 user_pref("browser.bookmarks.addedImportButton", true);
 user_pref("browser.bookmarks.restore_default_bookmarks", false);
-user_pref("browser.compactmode.show", true);
+user_pref("browser.download.viewableInternally.typeWasRegistered.jxl", true);
+user_pref("browser.laterrun.enabled", true);
 user_pref("browser.proton.toolbar.version", 3);
 user_pref("browser.toolbarbuttons.introduced.sidebar-button", true);
 user_pref("browser.urlbar.placeholderName", "Google");
@@ -42,5 +43,6 @@ user_pref("privacy.trackingprotection.emailtracking.enabled", true);
 user_pref("privacy.trackingprotection.socialtracking.enabled", true);
 user_pref("services.sync.declinedEngines", "");
 user_pref("services.sync.engine.addresses.available", true);
+user_pref("sidebar.newTool.migration.passwords", "{\"visibilityPref\":\"browser.contextual-password-manager.enabled\",\"alreadyShown\":true}");
 user_pref("sidebar.visibility", "hide-on-close");
 user_pref("toolkit.profiles.newProfileSubmitted", true);
