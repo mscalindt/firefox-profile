@@ -43,4 +43,5 @@ to general usage, safe to remove/adjust:
 Quick download extension links:
 - [CanvasBlocker](https://addons.mozilla.org/firefox/downloads/latest/canvasblocker)
 - [Get cookies.txt LOCALLY](https://addons.mozilla.org/firefox/downloads/latest/get-cookies-txt-locally)
+- [NoScript Security Suite](https://addons.mozilla.org/firefox/downloads/latest/noscript)
 - [uBlock Origin](https://addons.mozilla.org/firefox/downloads/latest/ublock-origin)
