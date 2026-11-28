@@ -14,11 +14,6 @@ Note: On certain machines, this profile and/or its suggested
 configuration may result in more frequent captchas and their
 subsequent failures.
 
-All distinct configuration files in the profile directory carried over
-interactive configuration (not made by release.sh):
-- prefs.js (cleaned by release.sh)
-- times.json
-
 Peculiar personalized configuration in user.js that might be intrusive
 to general usage, safe to remove/adjust:
 - browser.cache.disk.enable
