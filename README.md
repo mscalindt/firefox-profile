@@ -6,6 +6,7 @@
 - docs/20261125/conf (suggested configuration to make after installation)
 - scripts/release.sh (source used to build the profile)
   -> chrome/userChrome.css
+  -> customKeys.json
   -> prefs.js
   -> user.js
 
@@ -15,7 +16,6 @@ subsequent failures.
 
 All distinct configuration files in the profile directory carried over
 interactive configuration (not made by release.sh):
-- customKeys.json
 - prefs.js (cleaned by release.sh)
 - times.json
 

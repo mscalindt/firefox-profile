@@ -535,6 +535,26 @@ printf "%s" \
 }
 ' > "$1"/chrome/userChrome.css
 printf "%s" \
+'{
+  "key_newNavigatorTab": {
+    "modifiers": "alt",
+    "key": "Z"
+  },
+  "key_restoreLastClosedTabOrWindowOrSession": {
+    "modifiers": "alt",
+    "key": "X"
+  },
+  "key_toggleMute": {
+    "modifiers": "alt",
+    "key": "A"
+  },
+  "key_close": {
+    "modifiers": "alt",
+    "key": "Q"
+  }
+}
+' > "$1"/customKeys.json
+printf "%s" \
 'user_pref("accessibility.force_disabled", 1);
 user_pref("app.normandy.enabled", false);
 user_pref("app.normandy.first_run", false);
